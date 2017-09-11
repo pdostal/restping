@@ -1,0 +1,9 @@
+.git*
+
+secrets.env*
+
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+redis/
