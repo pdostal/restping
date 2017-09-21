@@ -8,15 +8,22 @@ services:
     links:
       - redis
     restart: always
+    network_mode: bridge
   worker:
     build: .
-    command: node worker.js
+    command: cron && tail -f /var/log/cron.log
     env_file: secrets.env
     links:
       - redis
     restart: always
+    network_mode: bridge
   redis:
     image: redis
     volumes:
       - ./redis:/data
     restart: always
+    network_mode: bridge
+
+networks:
+  default:
+    driver: "null"

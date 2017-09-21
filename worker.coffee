@@ -48,12 +48,16 @@ new cronjob '0 * * * * *', ->
           agent: target.agent
           , (res) =>
             data = { status: res.statusCode, duration: Date.now() - start }
-            influx.writePoints([{ measurement: "#{target.md5}_#{target.name}", fields: data }])
+            influx.writePoints [{ measurement: "#{target.md5}_#{target.name}", fields: data }]
+            .catch (err) ->
+              logger "Influx writeerror"
             data.timestamp = moment().unix()
             redis.set target.md5, JSON.stringify(data), (err, reply) ->
         .on 'error', (err) ->
           data = { error: err.code, duration: Date.now() - start }
-          influx.writePoints([{ measurement: "#{target.md5}_#{target.name}", fields: data }])
+          influx.writePoints [{ measurement: "#{target.md5}_#{target.name}", fields: data }]
+          .catch (err) ->
+              logger "Influx writeerror"
           data.timestamp = moment().unix()
           redis.set target.md5, JSON.stringify(data), (err, reply) ->
 

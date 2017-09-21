@@ -18,12 +18,10 @@ settings = yamljs.load 'settings.yml'
 
 logger "Dashboard started"
 
-new cronjob '0 */4 * * * *', ->
-  logger "Bim bam!"
-  settings.categories.forEach (category, i) ->
-    category.targets.forEach (target, j) ->
-      target.md5 = md5 target.name+target.proto+target.port+target.success
+settings.categories.forEach (category, i) ->
+  category.targets.forEach (target, j) ->
+    target.md5 = md5 target.name+target.proto+target.port+target.success
 
-      redis.get target.md5, (err, reply) ->
-        logger "#{target.name} got #{JSON.parse(reply).status} in #{JSON.parse(reply).duration}ms"
-, null, true
+    redis.get target.md5, (err, reply) ->
+      logger "#{target.name} got #{JSON.parse(reply).status} in #{JSON.parse(reply).duration}ms"
+
